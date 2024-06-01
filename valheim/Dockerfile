@@ -3,8 +3,8 @@ LABEL maintainer="Jonathan Alvaro"
 ARG DEBIAN_FRONTEND="noninteractive"
 
 RUN apt update -y
-RUN apt install libatomic1 libpulse-dev libpulse0
-RUN apt upgrade
+RUN apt install -y libatomic1 libpulse-dev libpulse0
+RUN apt upgrade -y
 
 WORKDIR /
 
@@ -16,8 +16,13 @@ RUN steamcmd \
       +force_install_dir ${INSTALL_DIR} \
       +login anonymous \
       +app_update ${APP_ID} ${STEAM_BEATS} validate \
+      +app_update 1007 validate \
       +quit
 
 WORKDIR ${INSTALL_DIR}
 
 RUN mkdir -p server-data
+
+COPY startup.sh ${INSTALL_DIR}
+
+ENTRYPOINT ["./startup.sh"]
